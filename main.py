@@ -17,14 +17,16 @@ website_regex = re.compile("(\b(https?|ftp|file)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;
 def retrieve_thread(ws):
     while True:
         recv = ws.recv()
-        msg = recv.split(':', 2)[-1]
-        if re.match(website_regex, msg) is not None:
-            print("Found image!")
-            urllib.request.urlretrieve(f"{msg}", "test.jpeg")
-            im = Image.open(r"test.jpeg")
-            im.show()
-        print(f"{recv}")
-
+        try:
+            msg = recv.split(':', 2)[-1]
+            if re.match(website_regex, msg) is not None:
+                print("Found image!")
+                urllib.request.urlretrieve(f"{msg}", "test.jpeg")
+                im = Image.open(r"test.jpeg")
+                im.show()
+            print(f"{recv}")
+        except:
+            print(f"Failed: {recv}")
 
 def sending_thread(ws):
     ws.send("PRIVMSG #the_aurelius_ :one small step for man one giant leap for memekind")
